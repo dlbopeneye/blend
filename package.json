@@ -1,0 +1,8 @@
+{
+	"name": "blend",
+	"version": "0.0.1",
+	"description": "blend!",
+	"dependencies": {
+		"mime": "2.3.1"
+	}
+}

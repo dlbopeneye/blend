@@ -1,0 +1,23 @@
+#cells {
+	
+}
+
+.row {
+	
+}
+
+.color {
+	
+}
+
+.cell {
+	background-color: grey;
+	height: 50px;
+	width: 50px;
+	margin: 1px;
+	display: inline-block;
+}
+
+#color {
+	background-color: lightgrey;
+}
