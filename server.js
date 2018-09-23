@@ -18,29 +18,44 @@ function sendFile(response, filePath, fileContents) {
 	response.end(fileContents);
 }
 
+function serveFromDisk(response, cache, absPath) { // serves file from disk and updates cache
+	fs.readFile(absPath, function(err, data) {
+		if (err) {
+			send404(response);
+		} else {
+			cache[absPath] = [data, Date.now()]; // update cache
+			sendFile(response, absPath, data); // serve file read from disk
+		}
+	});
+}
+
 // serving static files
 function serveStatic(response, cache, absPath) {
 	if (cache[absPath]) { // check if file is cached in memory
-		sendFile(response, absPath, cache[absPath][0]); // serve file from memory
-	} else {
-		fs.exists(absPath, function(exists) { // check if file exists
-			if (exists) {
-				fs.readFile(absPath, function(err, data) { // read file from disk
-					if (err) {
-						send404(response);
-					} else {
-						cache[absPath] = [data];
-						sendFile(response, absPath, data); // serve file read from disk
-					}
-				});
+		fs.stat(absPath, function(err, stats) {
+			if (err) {
+				send404(response);
 			} else {
+				// check if file has been modified since put in to cache
+				if (cache[absPath][1] < stats.mtimeMs) {
+					serveFromDisk(response, cache, absPath);
+				} else {
+					sendFile(response, absPath, cache[absPath][0]); // serve file from memory
+				}
+			}
+		});
+	} else {
+		fs.access(absPath, function(err) { // check if file exists
+			if (err) {
 				send404(response); // send HTTP 404 response
+			} else {
+				serveFromDisk(response, cache, absPath);
 			}
 		});
 	}
 }
 
-// logic to create and HTTP server
+// logic to create an HTTP server
 var server = http.createServer(function(request, response) {
 	var filePath = false;
 	
