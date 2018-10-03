@@ -8,43 +8,64 @@
 	</head>
 	
 	<body>
-		<div id="cells"></div>
-		<div id="settings">
-			<form id="options">
-				Height
-				<select id="height">
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</select>
-				Width
-				<select id="width">
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</select><br>
-				Color 1
-				<input id="color1" type="color" class="color">
-				Color 2
-				<input id="color2" type="color" class="color"><br>
-				Color 3
-				<input id="color3" type="color" class="color">
-				Color 4
-				<input id="color4" type="color" class="color">
-			</form>
+		<div class="content">
+			<div id="cells" class="cells"></div>
+			<div class="settings">
+				<form id="options">
+					Height
+					<select id="height">
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+						<option value="13">13</option>
+						<option value="14">14</option>
+						<option value="15">15</option>
+						<option value="16">16</option>
+					</select>
+					Width
+					<select id="width">
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+						<option value="13">13</option>
+						<option value="14">14</option>
+						<option value="15">15</option>
+						<option value="16">16</option>
+					</select><br>
+					Color 1
+					<input id="color1" type="color" class="color">
+					Color 2
+					<input id="color2" type="color" class="color"><br>
+					Color 3
+					<input id="color3" type="color" class="color">
+					Color 4
+					<input id="color4" type="color" class="color">
+				</form>
+			</div>
+			<div id="color_display_div" class="color_display_div">
+				<div id="color_display_cell" class="color_display_cell"></div>
+				<div id="color_display_text" class="color_display_text"></div>
+			</div>
+			<div id="buttons">
+				<button id="generate" onclick="generateCells()">Generate</button>
+				<button id="clear" onclick="clearCells()">Clear</button>
+			</div>
 		</div>
-		<button id="generate" onclick="generateCells()">Generate</button>
-		<button id="clear" onclick="clearCells()">Clear</button>
-		<div id="color"></div>
 	</body>
 </html>

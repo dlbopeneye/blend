@@ -1,23 +1,48 @@
-#cells {
-	
+.content {
+	max-width: 960px;
+	margin: auto;
+}
+
+.cells {
+	min-width: 600px;
 }
 
 .row {
-	
-}
-
-.color {
-	
+	min-width: 600px;
 }
 
 .cell {
 	background-color: grey;
+	border-style: solid;
+	border-width: 2px;
+	border-color: grey;	height: 50px;
+	width: 50px;
+
+	margin: 1px;
+	display: inline-block;
+}
+
+.settings {
+	width: 300px;
+	display: inline-block;
+}
+
+.color_display_div {
+	width: 300px;
+	display: inline-block;
+}
+
+.color_display_cell {
+	background-color: white;
+	border-style: solid;
+	border-width: 2px;
+	border-color: white;
 	height: 50px;
 	width: 50px;
 	margin: 1px;
 	display: inline-block;
 }
 
-#color {
-	background-color: lightgrey;
+.color_display_text {
+	display: inline-block;
 }

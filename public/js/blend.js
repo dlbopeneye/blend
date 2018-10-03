@@ -1,15 +1,55 @@
 function clearCells() {
 	$('#cells').html("");
+	clearColorDisplay();
+}
+
+function clearColorDisplay() {
+	$('.color_display_cell').css({
+		'background-color': 'white',
+		'border-color': 'white'});
+	$('.color_display_text').html("");
 }
 
 //cell mouse over effect
 function applyMouseOver() {
 	$('.cell').mouseover(function() {
-		$('#color').html($(this).css('background-color'));
+		$('.color_display_cell').css({
+			'background-color': $(this).css('background-color'),
+			'border-color': $(this).css('background-color')});
+		$('.color_display_text').html($(this).css('background-color'));
 	}).mouseout(function() {
-		$('#color').html("");
+		$('.color_display_cell').css({
+			'background-color': 'white',
+			'border-color': 'white'});
+		$('.color_display_text').html("");
 	});
 }
+
+function clickLock(lockedCell) {
+	$('#' + lockedCell).click(function() { // anonymous function to unlock cell
+		$(this).unbind('click');
+		$(this).css({'border-color': $(this).css('background-color')});
+		$('.color_display_cell').css({
+			'border-color': $('.color_display_cell').css('background-color')});
+		applyMouseOver();
+		applyClick();
+	});
+}
+ 
+//cell click effect
+function applyClick() {
+	$('.cell').click(function() {
+		$('.cell').unbind('click');
+		$('.cell').unbind('mouseover');
+		$('.cell').unbind('mouseout');
+		$(this).css({
+			'border-color': 'black'});
+		$('.color_display_cell').css({
+			'border-color': 'black'});
+		clickLock($(this).attr('id'));
+	});
+}
+
 
 // converts a color in hex string format #RRBBGG to an array [r,b,g]
 function colorStringToArray(color) {
@@ -60,6 +100,7 @@ function generateCells() {
 	
 	var height = $('#height').val();
 	var width = $('#width').val();
+	var size = Math.min(50, Math.floor(500/height), Math.floor(500/width)) + 'px';
 	
 	var color1 = colorStringToArray($('#color1').val());
 	var color2 = colorStringToArray($('#color2').val());
@@ -103,14 +144,20 @@ function generateCells() {
 		var newRow = $('<div>').addClass('row').appendTo('#cells');
 		for (var j = 0; j < width; j++) {
 			var newCell = $('<div>', {id: "cell"+i+"_"+j}).addClass('cell')
-				.css('background-color', colorArrayToString(cellColors[i][j]));
+				.css({
+					'background-color': colorArrayToString(cellColors[i][j]),
+					'border-color': colorArrayToString(cellColors[i][j]),
+					'height': size,
+					'width': size});
 			
 			newCell.appendTo(newRow);
 		}
 	}
 	applyMouseOver();
+	applyClick();
 }
 
-
+function color_test() {
+}
 
 
