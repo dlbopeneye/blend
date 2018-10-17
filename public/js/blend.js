@@ -1,3 +1,5 @@
+var selectedCell;
+
 function clearCells() {
 	$('#cells').html("");
 	clearColorDisplay();
@@ -10,46 +12,51 @@ function clearColorDisplay() {
 	$('.color_display_text').html("");
 }
 
+function setColorDisplay(cellId) {
+	$('.color_display_cell').css(
+		'background-color', $('#' + cellId).css('background-color')).css(
+		'border-color', $('#' + cellId).css('background-color'));
+	$('.color_display_text').html($('#' + cellId).css('background-color'));
+}
+
 //cell mouse over effect
 function applyMouseOver() {
 	$('.cell').mouseover(function() {
 		$('.color_display_cell').css({
 			'background-color': $(this).css('background-color'),
-			'border-color': $(this).css('background-color')});
+			'border-color': $(this).css('background-color')
+		});
 		$('.color_display_text').html($(this).css('background-color'));
 	}).mouseout(function() {
-		$('.color_display_cell').css({
-			'background-color': 'white',
-			'border-color': 'white'});
-		$('.color_display_text').html("");
+		clearColorDisplay();
 	});
 }
 
-function clickLock(lockedCell) {
-	$('#' + lockedCell).click(function() { // anonymous function to unlock cell
-		$(this).unbind('click');
-		$(this).css({'border-color': $(this).css('background-color')});
-		$('.color_display_cell').css({
-			'border-color': $('.color_display_cell').css('background-color')});
+function selectCell(cellId) {
+	if(cellId == selectedCell) {
+		$('#' + cellId).css(
+			'border-color', $('#' + cellId).css('background-color')
+		);
+		selectedCell = null;
 		applyMouseOver();
-		applyClick();
-	});
+	} else {
+		$('.cell').unbind('mouseover mouseout');
+		$('#' + selectedCell).css(
+				'border-color', $('#' + selectedCell).css('background-color'));
+		selectedCell = cellId;
+		setColorDisplay(selectedCell);
+		$('#' + selectedCell).css({
+			'border-color': 'black'
+		});
+	}
 }
- 
+
 //cell click effect
 function applyClick() {
-	$('.cell').click(function() {
-		$('.cell').unbind('click');
-		$('.cell').unbind('mouseover');
-		$('.cell').unbind('mouseout');
-		$(this).css({
-			'border-color': 'black'});
-		$('.color_display_cell').css({
-			'border-color': 'black'});
-		clickLock($(this).attr('id'));
+	$('.cell').bind('click', function() {
+		selectCell($(this).attr('id'));
 	});
 }
-
 
 // converts a color in hex string format #RRBBGG to an array [r,b,g]
 function colorStringToArray(color) {
@@ -94,6 +101,60 @@ function doubleBlend(c1, c2) {
 	return [newR, newG, newB];
 }
 
+// uses the "interpolation" method to create color gradients
+function generateColorInterpolation(height, width, cellColors) {
+	// generate initial rows
+	for (var i = 1; i < width-1; i++) {
+		cellColors[0][i] = blendColors(cellColors[0][0] , cellColors[0][width-1], i, width);
+		cellColors[height-1][i] = blendColors(cellColors[height-1][0], cellColors[height-1][width-1], i, width);
+	}
+	
+	// generate initial columns
+	for (var i = 1; i < height-1; i++) {
+		cellColors[i][0] = blendColors(cellColors[0][0], cellColors[height-1][0] , i, height);
+		cellColors[i][width-1] = blendColors(cellColors[0][width-1] , cellColors[height-1][width-1], i, height);
+	}
+	
+	// generate colors
+	for (var i = 1; i < width-1; i++) {
+		for (var j = 1; j < height-1; j++) {
+			var c1 = blendColors(cellColors[j][0], cellColors[j][width-1], i, width);
+			var c2 = blendColors(cellColors[0][i], cellColors[height-1][i], j, height);
+			cellColors[j][i] = doubleBlend(c1, c2);
+		}
+	}
+	
+	return cellColors;
+}
+
+// calculates euclidean distance given x and y distance
+function distance(x, y) {
+	return Math.sqrt(x*x + y*y) + 1;
+}
+
+//uses the "euclidean" method to create color gradients
+function generateColorEuclidean(height, width, cellColors) {
+	for (i = 0; i < height; i++) {
+		for (j = 0; j < width; j++) {
+			// we want to skip the four corners
+			if (i == 0 && j == 0 ||
+				i == 0 && j == width-1 ||
+				i == height-1 && j == 0 ||
+				i == height-1 && j== width-1) {
+				continue;
+			}
+			
+			cellColors[i][j] = cellColors[0][0].map(function(x) {
+				return Math.floor(x*(1/distance(i, j)));
+			});
+			
+			console.log(cellColors[i][j]);
+		}
+	}
+	
+	return cellColors;
+}
+
 // generate grid of cells
 function generateCells() {
 	clearCells();
@@ -118,25 +179,10 @@ function generateCells() {
 	cellColors[height-1][0]       = color3;
 	cellColors[height-1][width-1] = color4;
 	
-	// generate initial rows
-	for (var i = 1; i < width-1; i++) {
-		cellColors[0][i] = blendColors(color1, color2, i, width);
-		cellColors[height-1][i] = blendColors(color3, color4, i, width);
-	}
-	
-	// generate initial columns
-	for (var i = 1; i < height-1; i++) {
-		cellColors[i][0] = blendColors(color1, color3, i, height);
-		cellColors[i][width-1] = blendColors(color2, color4, i, height);
-	}
-	
-	// generate colors
-	for (var i = 1; i < width-1; i++) {
-		for (var j = 1; j < height-1; j++) {
-			var c1 = blendColors(cellColors[j][0], cellColors[j][width-1], i, width);
-			var c2 = blendColors(cellColors[0][i], cellColors[height-1][i], j, height);
-			cellColors[j][i] = doubleBlend(c1, c2);
-		}
+	if ($('#method').val() == 0) {
+		cellColors = generateColorInterpolation(height, width, cellColors);
+	} else {
+		cellColors = generateColorEuclidean(height, width, cellColors);
 	}
 	
 	// create cell and add color
@@ -156,8 +202,4 @@ function generateCells() {
 	applyMouseOver();
 	applyClick();
 }
-
-function color_test() {
-}
-
 
