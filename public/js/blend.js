@@ -2,6 +2,7 @@ var selectedCell;
 
 function clearCells() {
 	$('#cells').html("");
+	selectedCell = null;
 	clearColorDisplay();
 }
 
@@ -199,6 +200,7 @@ function generateCells() {
 			newCell.appendTo(newRow);
 		}
 	}
+	selectedCell = null;
 	applyMouseOver();
 	applyClick();
 }
