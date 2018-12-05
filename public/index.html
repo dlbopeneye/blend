@@ -8,57 +8,27 @@
 	</head>
 	
 	<body>
+		<h1>Color Blender</h1>
+		
 		<div class="content">
 			<div id="cells" class="cells"></div>
-			<div class="settings">
+			<div id="settings" class="settings">
 				<form id="options">
-					Height
-					<select id="height">
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="7">7</option>
-						<option value="8">8</option>
-						<option value="9">9</option>
-						<option value="10">10</option>
-						<option value="11">11</option>
-						<option value="12">12</option>
-						<option value="13">13</option>
-						<option value="14">14</option>
-						<option value="15">15</option>
-						<option value="16">16</option>
-					</select>
-					Width
-					<select id="width">
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="7">7</option>
-						<option value="8">8</option>
-						<option value="9">9</option>
-						<option value="10">10</option>
-						<option value="11">11</option>
-						<option value="12">12</option>
-						<option value="13">13</option>
-						<option value="14">14</option>
-						<option value="15">15</option>
-						<option value="16">16</option>
-					</select><br>
-					Method
+					<label>Height</label>
+					<input type="number" min=2 max=100 id="height"><br>
+					<label>Width</label>
+					<input type="number" min=2 max=100 id="width"><br>
+					<label>Method</label>
 					<select id="method">
 						<option value="0">Interpolation</option>
 					</select><br>
-					Color 1
-					<input id="color1" type="color" class="color" value="white">
-					Color 2
+					<label>Color 1</label>
+					<input id="color1" type="color" class="color"><br>
+					<label>Color 2</label>
 					<input id="color2" type="color" class="color"><br>
-					Color 3
-					<input id="color3" type="color" class="color">
-					Color 4
+					<label>Color 3</label>
+					<input id="color3" type="color" class="color"><br>
+					<label>Color 4</label>
 					<input id="color4" type="color" class="color">
 				</form>
 			</div>
